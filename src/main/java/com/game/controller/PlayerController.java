@@ -20,8 +20,22 @@ public class PlayerController {
         try {
             return ResponseEntity.ok(playerService.getPlayers(allParams));
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("Cannot get all players");
+            return ResponseEntity.badRequest().body("Getting players Error");
+        }
+    }
+
+    @GetMapping("/players/{id}")
+    public ResponseEntity getPlayerById(@PathVariable("id") Long id) {
+        try {
+            if (id == null || id < 0) {
+                return ResponseEntity.badRequest().body("Invalid ID");
+            }
+            PlayerEntity player = playerService.getPlayerById(id);
+            if (player == null) return ResponseEntity.notFound().build();
+
+            return ResponseEntity.ok(player);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Getting player by id Error");
         }
     }
 
@@ -30,7 +44,7 @@ public class PlayerController {
         try {
             return ResponseEntity.ok(playerService.getPlayersCount(allParams));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Cannot get all players count");
+            return ResponseEntity.badRequest().body("Getting players count Error");
         }
     }
 
@@ -44,7 +58,6 @@ public class PlayerController {
             }
             return ResponseEntity.badRequest().body("Invalid Data");
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().body("Player creation Error");
         }
     }
