@@ -58,6 +58,10 @@ public class PlayerService {
         );
     }
 
+    public PlayerEntity createPlayer(PlayerEntity player) {
+        return playerRepo.save(player);
+    }
+
     private Specification<PlayerEntity> nameLike(String name) {
         return ((root, query, criteriaBuilder) ->
                         name != null ? criteriaBuilder.like(root.get(PlayerParams.name), "%" + name + "%") : null);

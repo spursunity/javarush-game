@@ -1,6 +1,8 @@
 package com.game.entity;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Entity
@@ -60,7 +62,7 @@ public class PlayerEntity {
         return level;
     }
 
-    public void setLevel(Integer level) {
+    private void setLevel(Integer level) {
         this.level = level;
     }
 
@@ -68,7 +70,7 @@ public class PlayerEntity {
         return untilNextLevel;
     }
 
-    public void setUntilNextLevel(Integer untilNextLevel) {
+    private void setUntilNextLevel(Integer untilNextLevel) {
         this.untilNextLevel = untilNextLevel;
     }
 
@@ -102,5 +104,23 @@ public class PlayerEntity {
 
     public void setProfession(Profession profession) {
         this.profession = profession;
+    }
+
+    public void setLevelData() {
+        int currentLevel = (int) ((Math.pow((double) 2500 + (double) (200 * experience), 0.5) - 50) / 100);
+        setLevel(currentLevel);
+        int untilNextLvl = 50 * (currentLevel + 1) * (currentLevel + 2) - experience;
+        setUntilNextLevel(untilNextLvl);
+    }
+
+    public boolean validateInputData() {
+        LocalDate startDate = LocalDate.of(1999, 12, 31);
+        LocalDate endDate = LocalDate.of(3001, 1, 1);
+        LocalDate birthdayLocalTime = birthday.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        return name != null && title != null && race != null && profession != null && birthday != null &&
+            experience != null && !"".equals(name) && name.length() <= 12 && title.length() <= 30 &&
+            birthday.getTime() > 0 && experience > 0 && experience <= 10_000_000 &&
+            startDate.isBefore(birthdayLocalTime) && endDate.isAfter(birthdayLocalTime);
     }
 }
