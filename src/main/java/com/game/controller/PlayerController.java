@@ -27,7 +27,7 @@ public class PlayerController {
     @GetMapping("/players/{id}")
     public ResponseEntity getPlayerById(@PathVariable("id") Long id) {
         try {
-            if (id == null || id < 0) {
+            if (!playerService.isValidId(id)) {
                 return ResponseEntity.badRequest().body("Invalid ID");
             }
             PlayerEntity player = playerService.getPlayerById(id);
@@ -65,7 +65,7 @@ public class PlayerController {
     @PostMapping("/players/{id}")
     public ResponseEntity updatePlayer(@RequestBody PlayerEntity player, @PathVariable("id") Long id) {
         try {
-            if (id == null || id < 0) return ResponseEntity.badRequest().body("Invalid ID");
+            if (!playerService.isValidId(id)) return ResponseEntity.badRequest().body("Invalid ID");
             PlayerEntity foundPlayer = playerService.getPlayerById(id);
             if (foundPlayer == null) return ResponseEntity.notFound().build();
 
@@ -78,7 +78,7 @@ public class PlayerController {
     @DeleteMapping("/players/{id}")
     public ResponseEntity deletePlayer(@PathVariable("id") Long id) {
         try {
-            if (id == null || id < 0) return ResponseEntity.badRequest().body("Invalid ID");
+            if (!playerService.isValidId(id)) return ResponseEntity.badRequest().body("Invalid ID");
 
             PlayerEntity foundPlayer = playerService.getPlayerById(id);
             if (foundPlayer == null) return ResponseEntity.notFound().build();

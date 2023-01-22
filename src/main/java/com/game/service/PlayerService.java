@@ -93,6 +93,10 @@ public class PlayerService {
         playerRepo.delete(player);
     }
 
+    public boolean isValidId(Long id) {
+        return id != null && id > 0;
+    }
+
     private Specification<PlayerEntity> nameLike(String name) {
         return ((root, query, criteriaBuilder) ->
                         name != null ? criteriaBuilder.like(root.get(PlayerParams.name), "%" + name + "%") : null);
@@ -148,7 +152,7 @@ public class PlayerService {
                 maxLevel != null ? criteriaBuilder.lessThanOrEqualTo(root.get(PlayerParams.level), maxLevel) : null);
     }
 
-    class PlayerParams {
+    static class PlayerParams {
         private Map<String, String> allParams;
         public static final String name = "name";
         public static final String title = "title";
