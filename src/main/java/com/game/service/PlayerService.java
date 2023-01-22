@@ -89,6 +89,10 @@ public class PlayerService {
         return playerRepo.save(foundPlayer);
     }
 
+    public void deletePlayer(PlayerEntity player) {
+        playerRepo.delete(player);
+    }
+
     private Specification<PlayerEntity> nameLike(String name) {
         return ((root, query, criteriaBuilder) ->
                         name != null ? criteriaBuilder.like(root.get(PlayerParams.name), "%" + name + "%") : null);

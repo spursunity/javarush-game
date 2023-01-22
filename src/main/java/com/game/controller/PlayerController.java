@@ -65,15 +65,28 @@ public class PlayerController {
     @PostMapping("/players/{id}")
     public ResponseEntity updatePlayer(@RequestBody PlayerEntity player, @PathVariable("id") Long id) {
         try {
-            if (id == null || id < 0) {
-                return ResponseEntity.badRequest().body("Invalid ID");
-            }
+            if (id == null || id < 0) return ResponseEntity.badRequest().body("Invalid ID");
             PlayerEntity foundPlayer = playerService.getPlayerById(id);
             if (foundPlayer == null) return ResponseEntity.notFound().build();
 
             return ResponseEntity.ok(playerService.updatePlayer(foundPlayer, player));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Player update Error");
+        }
+    }
+
+    @DeleteMapping("/players/{id}")
+    public ResponseEntity deletePlayer(@PathVariable("id") Long id) {
+        try {
+            if (id == null || id < 0) return ResponseEntity.badRequest().body("Invalid ID");
+
+            PlayerEntity foundPlayer = playerService.getPlayerById(id);
+            if (foundPlayer == null) return ResponseEntity.notFound().build();
+
+            playerService.deletePlayer(foundPlayer);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Player deletion Error");
         }
     }
 }
