@@ -258,11 +258,15 @@ public class PlayerService {
 
         public Pageable getPaginationAndSort() {
             try {
-                int pageSize = Integer.parseInt(allParams.get(PlayerParams.pageSize));
-                int pageNumber = Integer.parseInt(allParams.get(PlayerParams.pageNumber));
+                int pageSize = allParams.get(PlayerParams.pageSize) != null ?
+                    Integer.parseInt(allParams.get(PlayerParams.pageSize)) :
+                    3;
+                int pageNumber = allParams.get(PlayerParams.pageNumber) != null ?
+                    Integer.parseInt(allParams.get(PlayerParams.pageNumber)) :
+                    0;
                 PlayerOrder playerOrder = allParams.get(PlayerParams.order) != null ?
-                        PlayerOrder.valueOf(allParams.get(PlayerParams.order)) :
-                        PlayerOrder.ID;
+                    PlayerOrder.valueOf(allParams.get(PlayerParams.order)) :
+                    PlayerOrder.ID;
 
                 return PageRequest.of(pageNumber, pageSize, Sort.by(playerOrder.getFieldName()).ascending());
             } catch (Exception e) {
