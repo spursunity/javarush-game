@@ -61,4 +61,19 @@ public class PlayerController {
             return ResponseEntity.badRequest().body("Player creation Error");
         }
     }
+
+    @PostMapping("/players/{id}")
+    public ResponseEntity updatePlayer(@RequestBody PlayerEntity player, @PathVariable("id") Long id) {
+        try {
+            if (id == null || id < 0) {
+                return ResponseEntity.badRequest().body("Invalid ID");
+            }
+            PlayerEntity foundPlayer = playerService.getPlayerById(id);
+            if (foundPlayer == null) return ResponseEntity.notFound().build();
+
+            return ResponseEntity.ok(playerService.updatePlayer(foundPlayer, player));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Player update Error");
+        }
+    }
 }

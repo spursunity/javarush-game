@@ -4,6 +4,7 @@ import com.game.controller.PlayerOrder;
 import com.game.entity.PlayerEntity;
 import com.game.entity.Profession;
 import com.game.entity.Race;
+import com.game.exception.PlayerInvalidDataException;
 import com.game.repository.PlayerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -64,6 +65,28 @@ public class PlayerService {
 
     public PlayerEntity getPlayerById(Long id) {
         return playerRepo.findById(id).orElse(null);
+    }
+
+    public PlayerEntity updatePlayer(PlayerEntity foundPlayer, PlayerEntity newPlayer) throws PlayerInvalidDataException {
+        String name = newPlayer.getName();
+        String title = newPlayer.getTitle();
+        Race race = newPlayer.getRace();
+        Profession profession = newPlayer.getProfession();
+        Date birthday = newPlayer.getBirthday();
+        Boolean banned = newPlayer.getBanned();
+        Integer experience = newPlayer.getExperience();
+
+        if (name != null) foundPlayer.setName(name);
+        if (title != null) foundPlayer.setTitle(title);
+        if (race != null) foundPlayer.setRace(race);
+        if (profession != null) foundPlayer.setProfession(profession);
+        if (birthday != null) foundPlayer.setBirthday(birthday);
+        if (banned != null) foundPlayer.setBanned(banned);
+        if (experience != null) foundPlayer.setExperience(experience);
+
+        foundPlayer.setLevelData();
+        if (!foundPlayer.validateInputData()) throw new PlayerInvalidDataException();
+        return playerRepo.save(foundPlayer);
     }
 
     private Specification<PlayerEntity> nameLike(String name) {
